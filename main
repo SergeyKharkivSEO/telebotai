@@ -1,0 +1,28 @@
+from telegram.ext import Updater, CommandHandler
+
+# Обработчик команды /start
+def start(update, context):
+    update.message.reply_text('Привет! Это бот для парсинга телеграм каналов. Используй команду /parse для начала парсинга.')
+
+# Обработчик команды /parse
+def parse(update, context):
+    channel_username = '@your_channel_username'  # Замените на юзернейм вашего канала
+    messages = context.bot.get_chat_history(chat_id=channel_username, limit=10)  # Получаем последние 10 сообщений из канала
+    for message in messages:
+        update.message.reply_text(message.text)  # Отправляем текст сообщения пользователю
+
+def main():
+    # Токен вашего бота
+    token = 'YOUR_BOT_TOKEN'
+    updater = Updater(token, use_context=True)
+    dp = updater.dispatcher
+
+    # Добавляем обработчики команд
+    dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(CommandHandler("parse", parse))
+
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == '__main__':
+    main()
